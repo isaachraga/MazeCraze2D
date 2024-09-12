@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Numerics;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.LowLevel;
 
 public class PlayerController : MonoBehaviour
 {
@@ -21,7 +22,7 @@ public class PlayerController : MonoBehaviour
     public bool pause = false;
     
 
-    // Start is called before the first frame update
+    
     void Start()
     {
         characterRigidBody = GetComponent<Rigidbody2D>();
@@ -29,15 +30,14 @@ public class PlayerController : MonoBehaviour
         deviceCheck();
     }
 
-    // Update is called once per frame
+    
     void Update()
     {
+        //disables controlls on pause
         if(pause == false){
             controlls();
             spriteRotation();
-        } else{
-             //Debug.Log(playerNum+ ": " + pause);
-        }
+        } 
 
         if(moveHorizontal != 0 || moveVertical != 0){
             anim.SetBool("isMoving", true);
@@ -56,10 +56,10 @@ public class PlayerController : MonoBehaviour
 
     private void spriteRotation(){
         float angle = Mathf.Atan2(moveVertical, moveHorizontal)*Mathf.Rad2Deg+270;
-        //Debug.Log(angle);
         childSprite.transform.rotation =UnityEngine.Quaternion.Euler(0,0,angle);
     }
 
+    //sets player devices to controllers if more than one controler is plugged in
     void deviceCheck(){
         if( InputSystem.devices.Count > 3){
             playerInput.SwitchCurrentControlScheme("Gamepad", Gamepad.all[playerInput.playerIndex]);
@@ -67,12 +67,11 @@ public class PlayerController : MonoBehaviour
     }
 
     
-
+    //input handler
     private void controlls(){
         
-            moveHorizontal = playerInput.actions["Move"].ReadValue<UnityEngine.Vector2>().x;
-            moveVertical = playerInput.actions["Move"].ReadValue<UnityEngine.Vector2>().y;
-        
+        moveHorizontal = playerInput.actions["Move"].ReadValue<UnityEngine.Vector2>().x;
+        moveVertical = playerInput.actions["Move"].ReadValue<UnityEngine.Vector2>().y;
         
     }
 

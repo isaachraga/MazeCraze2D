@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 public class PauseButtons : MonoBehaviour
 {
     public int num;
-
+    //button controller for the pause menu buttons
     public void selected(){
         if(num == 0){
 

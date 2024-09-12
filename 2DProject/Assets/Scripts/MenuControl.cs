@@ -14,7 +14,6 @@ public class MenuControl : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-       
         select();
     }
 
@@ -35,18 +34,12 @@ public class MenuControl : MonoBehaviour
         } else if(selection == 2){
             EventSystem.current.SetSelectedGameObject(credit.gameObject);
         }
-        //Debug.Log("Select: "+selection);
     }
 
+    //menu navigation split up by direction
     public void HandleRight(InputAction.CallbackContext context)
     {
-        //print(context.phase);
-
-        /*if (context.performed)
-        {
-           // print("Attack performed");
-        }
-        else*/ if (context.started)
+        if (context.started)
         {
             if (selection < 2){
                 ++selection;
@@ -56,10 +49,6 @@ public class MenuControl : MonoBehaviour
             }
             select();
         }
-        /*else if (context.canceled)
-        {
-            //print("Attack canceled");
-        }*/
     }
 
     public void HandleLeft(InputAction.CallbackContext context)

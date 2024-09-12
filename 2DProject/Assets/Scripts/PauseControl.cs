@@ -13,24 +13,15 @@ public class PauseControl : MonoBehaviour
     private PlayerInput playerInput;
     public TMP_Text text;
     
-    // Start is called before the first frame update
+    
     void Start()
     {
-        //Debug.Log("Start");
-        //playerInput = GetComponent<PlayerInput>();
+        
         select();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-        //InputControlls();
-        
-        
-
-        
-    }
+    
+    
     void select(){
         if(selection == 0){
             EventSystem.current.SetSelectedGameObject(resume.gameObject);
@@ -40,19 +31,13 @@ public class PauseControl : MonoBehaviour
             EventSystem.current.SetSelectedGameObject(quit.gameObject);
         }
 
-        //text.text = selection.ToString();
-        //Debug.Log("Select: "+selection);
+        
     }
 
+    //menu navigation split up by direction
     public void HandleRight(InputAction.CallbackContext context)
     {
-        //print(context.phase);
-
-        /*if (context.performed)
-        {
-           // print("Attack performed");
-        }
-        else*/ if (context.started)
+        if (context.started)
         {
             if (selection < 2){
                 ++selection;
@@ -62,10 +47,7 @@ public class PauseControl : MonoBehaviour
             }
             select();
         }
-        /*else if (context.canceled)
-        {
-            //print("Attack canceled");
-        }*/
+        
     }
 
     public void HandleLeft(InputAction.CallbackContext context)

@@ -55,6 +55,7 @@ public class GameManager : MonoBehaviour
         {
             Application.Quit();
         }
+        //Pause check
         if (Input.GetKeyDown("backspace"))
         {
             unpause(); 
@@ -62,10 +63,10 @@ public class GameManager : MonoBehaviour
 
         
     }
-
+/*
     public void HandlePauseButton(){
         unpause(); 
-    }
+    }*/
 
     public void unpause(){
         if(pause){
@@ -79,6 +80,7 @@ public class GameManager : MonoBehaviour
         p2.GetComponent<PlayerController>().pause = pause;
     }
 
+    //Fills board with all wall pieces
     void fillBoard(){
         for(int i = 0; i < maxX; ++i){
             for(int j = 0; j < maxY; ++j){
@@ -100,12 +102,12 @@ public class GameManager : MonoBehaviour
     }
 
     void buildPaths(){
-        //Debug.Log("Build");
+        
         int startLoc = UnityEngine.Random.Range(1,24);
         Tuple<int,int> p = new Tuple<int,int>(1,startLoc);
         paths.Add(p);
         Board[p.Item1, p.Item2] = 1;
-        //Debug.Log("x: " + p.Item1 + " Y: " + p.Item2);
+        
 
         
 
@@ -113,13 +115,11 @@ public class GameManager : MonoBehaviour
             start = p;
         }
 
-        //pick random direction if directions left
+        //build maze with depth first traversal
+        //pick random direction if anydirections left
         //check for validity
-        // remove direction
+        //remove direction
         //remove path
-        int count = paths.Count;
-        
-        
         
         while(paths.Count > 0){
 
@@ -133,22 +133,21 @@ public class GameManager : MonoBehaviour
 
             int dirCount = dir.Count;
 
+            //Check for next assigned space to check, if not use the first item in path array
             if (next.Item1 == -1 && next.Item2 == -1){
                 testing = paths[0];
-                //Debug.Log("RESET: " + paths[0].Item1 + ", " + paths[0].Item2);
             } else{
                 testing = next;
             }
             
+            //check unitl valid direction or verify no directions(end of path)
             while(dirCount > 0){
                 int dirNum = UnityEngine.Random.Range(0, dir.Count);
-                
-                
                 
                 if(dir[dirNum] == "Up"){
                     if(!checkValid(testing, 0, 1)){
                         dir.RemoveAt(dirNum);
-                        //Debug.Log("Invalid");
+                        
                     }else{
                         break;
                     }
@@ -156,7 +155,6 @@ public class GameManager : MonoBehaviour
                 } else if(dir[dirNum] == "Down"){
                     if(!checkValid(testing, 0, -1)){
                         dir.RemoveAt(dirNum);
-                        //Debug.Log("Invalid");
                     }else{
                         break;
                     }
@@ -164,21 +162,18 @@ public class GameManager : MonoBehaviour
                 } else if(dir[dirNum] == "Left"){
                     if(!checkValid(testing, -1, 0)){
                         dir.RemoveAt(dirNum);
-                        //Debug.Log("Invalid");
                     }else{
                         break;
                     }
 
-                } else {
+                } else { //Right
                     if(!checkValid(testing, 1, 0)){
                         dir.RemoveAt(dirNum);
-                        //Debug.Log("Invalid");
                     }else{
                         break;
                     }
 
                 }
-                //Debug.Log("Hit Direction");
                 dirCount = dir.Count;
                 next = new Tuple<int,int>(-1,-1);
                 if(paths.Count > 0){
@@ -186,51 +181,33 @@ public class GameManager : MonoBehaviour
                         paths.RemoveAt(0);
                     }
                 }
-                
-                
-                
-
             }
-            
-
-
-
-
-            
-            
-            
-
         }
-
-        
     }
 
+    //check is potential location is a valid place to put path
     bool checkValid(Tuple<int,int> check, int x, int y){
         int tempX = check.Item1+x;
         int tempY = check.Item2+y;
-        //Debug.Log("Coord: " + tempX +", " + tempY);
-        //if not end and y valid
-
-        //StartCoroutine(spawner(tempX, tempY));
-        //tester = Instantiate(startBlock, new UnityEngine.Vector3(tempX, tempY, -1), UnityEngine.Quaternion.identity);
-        //Destroy(tester, time);
         
+        //verifies potential exit to board
+        //if not end and y is valid
         if(tempX == maxX-1 && (tempY != 0 || tempY != maxY-1)){
             if (end.Item1 == -1 && end.Item2 == -1){
                 end = check;
                 Board[tempX, tempY] = 1;
-
-                
                 return true;
             }
         }
         
+        //checks for board bounds
         if(tempX >= maxX-1 || tempY >= maxY-1 || tempX == 0 || tempY == 0){
-            //hit bounds
-
-           
+            
             return false;
+
         } else {
+
+            //these validity checks based on previous path location(-: previous, x: potential)
             if (check.Item1 == tempX-1 && check.Item2 == tempY){
                 // 0 0 0
                 // - x 0
@@ -239,31 +216,7 @@ public class GameManager : MonoBehaviour
                     
                     return false;
                 }
-                /*string errorlog = "";
-                if(Board[tempX,tempY+1]==1 ){
-                    errorlog += "Error-Right 1 || ";
-                    
-                }
-                if(Board[tempX,tempY-1]==1 ){
-                    errorlog += "Error-Right 2 || ";
-                    
-                }
-                if(Board[tempX+1,tempY]==1 ){
-                    errorlog += "Error-Right 3 || ";
-                    
-                }
-                if(Board[tempX+1,tempY+1]==1 ){
-                   errorlog += "Error-Right 4 || ";
-                    
-                }
-                if(Board[tempX-1,tempY-1]==1){
-                    errorlog += "Error-Right 5 || ";
-                    
-                }
-                if(errorlog != ""){
-                    Debug.Log(errorlog);
-                    return false;
-                }*/
+                
             }
             else if (check.Item1 == tempX && check.Item2 == tempY-1){
                 // 0 0 0
@@ -293,12 +246,13 @@ public class GameManager : MonoBehaviour
                     return false;
                 }
             }
+
+
+            //if all tests pass, instantiate new path and add that path as the next locaiton to test
             Tuple<int,int> p = new Tuple<int,int>(tempX,tempY);
             paths.Add(p);
-            //Instantiate(path, new UnityEngine.Vector3(p.Item1, p.Item2, 0), UnityEngine.Quaternion.identity);
             next = p;
             Board[tempX, tempY] = 1;
-            //Destroy(tester);
             return true;
 
             
@@ -310,7 +264,6 @@ public class GameManager : MonoBehaviour
 
     void instantiateGameBoard(){
         //iterate through board and instatiate pieces
-        //Debug.Log("Build Board Game");
         for(int i = 0; i < maxX; ++i){
             for(int j = 0; j < maxY; ++j){
                 if(Board[i,j] == 0){
@@ -361,8 +314,4 @@ public class GameManager : MonoBehaviour
         Tilemap.SetActive(true);
     }
 
-    
-
-
-    
 }

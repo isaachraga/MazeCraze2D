@@ -8,12 +8,11 @@ public class ScoreGoal : MonoBehaviour
     public GameObject gameManager;
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        //Debug.Log("Phase 1");
+        
+        //scores goal based on which player hit the trigger first
         if (collision.gameObject.tag == "Player")
         {
             gameManager.GetComponent<GameManager>().Score(collision.gameObject.name);
-            //Debug.Log("Phase 2");
-            //Debug.Log(collision.gameObject.name);
         }
     }
     
