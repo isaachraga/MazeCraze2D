@@ -1,4 +1,4 @@
-# MazeCraze2DProject
+# MazeCraze2D
 A recreation of the classic Maze Craze game built in Unity, featuring procedurally generated mazes using the Depth-First Search (DFS) algorithm, built for Intro to Game Design.
 
 ## Overview
