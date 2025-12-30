@@ -18,7 +18,7 @@ Each playthrough generates a unique maze, ensuring replayability while preservin
 ---
 
 ## Demo
-- ![Multiplayer](MazeCraze2D/Demo/Demo1.gif)  
+- ![Multiplayer](Demo/Demo1.gif)  
 
 ---
 
